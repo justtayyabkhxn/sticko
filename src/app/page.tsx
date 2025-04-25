@@ -31,11 +31,30 @@ export default function HomePage() {
     }
   }, []);
 
-  const fetchNotes = () => {
-    fetch("/api/notes")
-      .then((res) => res.json())
-      .then((data) => setNotes(data));
+  const fetchNotes = async () => {
+    const token = localStorage.getItem("token");
+  
+    try {
+      const res = await fetch("/api/notes", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      const data = await res.json();
+  
+      if (Array.isArray(data)) {
+        setNotes(data);
+      } else {
+        console.error("Expected array but got:", data);
+        setNotes([]);
+      }
+    } catch (err) {
+      console.error("Error fetching notes:", err);
+      setNotes([]);
+    }
   };
+  
 
   return (
     <main className="min-h-screen p-4 bg-[#121212] text-gray-200">

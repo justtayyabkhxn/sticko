@@ -41,10 +41,14 @@ export default function NoteEditor({
     }
 
     setError("");
+    const token = localStorage.getItem("token");
+
     try {
       const res = await fetch("/api/notes", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({
           title,
           content,
