@@ -13,16 +13,21 @@ export default function LoginPage() {
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
-    const res = await signIn("credentials", {
-      redirect: false,
-      email,
-      password,
+    const res = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
     });
-
-    if (res?.ok) {
+    
+    const data = await res.json();
+    
+    if (res.ok) {
+      localStorage.setItem("token", data.token); // or use cookies for better security
       router.push("/");
     } else {
-      alert("Invalid credentials");
+      alert(data.message || "Login failed");
     }
   };
 

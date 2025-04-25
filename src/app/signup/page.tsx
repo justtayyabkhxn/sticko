@@ -66,7 +66,7 @@ export default function SignupPage() {
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-sm text-gray-400"
+            className="absolute right-3 top-5 transform -translate-y-1/2 text-sm text-gray-400"
           >
             {showPassword ? "Hide" : "Show"}
           </button>
