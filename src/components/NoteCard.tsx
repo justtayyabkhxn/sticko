@@ -5,7 +5,7 @@ export default function NoteCard({
   title,
   content,
   todos,
-  color
+  color,
 }: {
   title: string;
   content?: string;
@@ -15,7 +15,7 @@ export default function NoteCard({
   return (
     <div
       className="rounded-2xl p-4 shadow-md break-words"
-      style={{ backgroundColor: color || "#fff" }}
+      style={{ backgroundColor: color || "#1e1e1e" }}
     >
       <h3 className="text-lg font-semibold mb-2">{title}</h3>
       {content && <p className="text-sm">{content}</p>}

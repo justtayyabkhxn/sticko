@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI!;
 
-export const connectDB = async () => {
+const connectDB = async () => {
   if (mongoose.connections[0].readyState) return;
 
   try {
@@ -15,3 +15,6 @@ export const connectDB = async () => {
     process.exit(1);
   }
 };
+
+export default connectDB;
+
