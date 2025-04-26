@@ -9,11 +9,11 @@ type DecodedToken = {
   exp: number;
 };
 
-export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PATCH(req: NextRequest) {
   try {
     await connectDB();
 
-    const noteId = params.id;
+    const noteId = req.nextUrl.pathname.split('/')[3]; // Assuming the ID is in the URL like `/api/notes/[id]`
     const authHeader = req.headers.get("authorization");
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
