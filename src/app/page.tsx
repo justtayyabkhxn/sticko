@@ -63,7 +63,7 @@ export default function HomePage() {
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {notes.map((note) => (
           <NoteCard
-            key={note._id}
+            id={note._id}
             title={note.title}
             content={note.content}
             todos={note.todos}
