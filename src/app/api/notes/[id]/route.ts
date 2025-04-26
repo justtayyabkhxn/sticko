@@ -1,7 +1,13 @@
-import  connectDB  from "../../../../lib/connectDB";
+import connectDB from "../../../../lib/connectDB";
 import Note from "../../../../lib/models/Note";
 import jwt from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
+
+type DecodedToken = {
+  id: string;
+  iat: number;
+  exp: number;
+};
 
 export async function PATCH(req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -15,7 +21,7 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
     }
 
     const token = authHeader.split(" ")[1];
-    const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as DecodedToken;
     const userId = decoded.id;
 
     const body = await req.json();

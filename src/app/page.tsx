@@ -29,20 +29,20 @@ export default function HomePage() {
       // If token exists, fetch the notes
       fetchNotes();
     }
-  }, []);
+  }, [router]); // ✅ added router in dependency array
 
   const fetchNotes = async () => {
     const token = localStorage.getItem("token");
-  
+
     try {
       const res = await fetch("/api/notes", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       const data = await res.json();
-  
+
       if (Array.isArray(data)) {
         setNotes(data);
       } else {
@@ -54,7 +54,6 @@ export default function HomePage() {
       setNotes([]);
     }
   };
-  
 
   return (
     <main className="min-h-screen p-4 bg-[#121212] text-gray-200">
@@ -63,6 +62,7 @@ export default function HomePage() {
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {notes.map((note) => (
           <NoteCard
+            key={note._id} // ✅ added key prop
             id={note._id}
             title={note.title}
             content={note.content}

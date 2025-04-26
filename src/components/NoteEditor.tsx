@@ -1,32 +1,36 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import jwt from "jsonwebtoken"; // You can install this package using 'npm install jsonwebtoken'
+import { jwtDecode } from "jwt-decode";
 
-export default function NoteEditor({
-  onClose,
-  onSave,
-}: {
+type DecodedToken = {
+  id: string;
+  name: string;
+  exp: number;  
+};
+
+interface NoteEditorProps {
   onClose: () => void;
   onSave: () => void;
-}) {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [color, setColor] = useState("#1e1e1e");
+}
+
+export default function NoteEditor({ onClose, onSave }: NoteEditorProps) {
+  const [title, setTitle] = useState<string>("");
+  const [content, setContent] = useState<string>("");
+  const [color, setColor] = useState<string>("#1e1e1e");
   const [user, setUser] = useState<{ id: string; name: string } | null>(null);
   const [error, setError] = useState<string>("");
 
-  // Get the JWT token from localStorage and decode it
   useEffect(() => {
     const token = localStorage.getItem("token");
 
     if (token) {
       try {
-        const decoded: any = jwt.decode(token); // Decode the JWT token
+        const decoded = jwtDecode<DecodedToken>(token);
         if (decoded && decoded.id) {
           setUser({ id: decoded.id, name: decoded.name });
         } else {
-          console.error("No valid user data in the token");
+          console.error("No valid user data in token");
         }
       } catch (err) {
         console.error("Error decoding token", err);
@@ -48,6 +52,7 @@ export default function NoteEditor({
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           title,

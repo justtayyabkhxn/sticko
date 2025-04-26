@@ -3,6 +3,11 @@ import connectDB from "@/lib/connectDB";
 import Note from "@/lib/models/Note";
 import jwt from "jsonwebtoken";
 
+type DecodedToken = {
+  id: string;
+  iat: number;
+  exp: number;
+};
 
 export async function GET(req: Request) {
   try {
@@ -16,8 +21,8 @@ export async function GET(req: Request) {
     }
 
     const token = authHeader.split(" ")[1];
-    const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-    const userId = (decoded as any).id;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET!) as DecodedToken;
+    const userId = decoded.id;
 
     const userNotes = await Note.find({ userId });
 

@@ -1,7 +1,6 @@
 "use client";
 
-import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
@@ -11,8 +10,9 @@ export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e: any) => {
+  const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    
     const res = await fetch("/api/auth/login", {
       method: "POST",
       headers: {
@@ -20,11 +20,11 @@ export default function LoginPage() {
       },
       body: JSON.stringify({ email, password }),
     });
-    
+
     const data = await res.json();
-    
+
     if (res.ok) {
-      localStorage.setItem("token", data.token); // or use cookies for better security
+      localStorage.setItem("token", data.token); // you can use cookies for better security
       router.push("/");
     } else {
       alert(data.message || "Login failed");
@@ -72,7 +72,7 @@ export default function LoginPage() {
         </button>
 
         <p className="text-sm text-gray-400">
-          Don't have an account?{" "}
+          Don&apos;t have an account?{" "}
           <Link href="/signup" className="text-blue-400 hover:underline">
             Sign up
           </Link>
