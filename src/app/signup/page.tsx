@@ -85,6 +85,18 @@ export default function SignupPage() {
             Login
           </Link>
         </p>
+        <footer className="mt-2 p-4 text-center text-sm text-gray-400 font-bold">
+          <p>
+            © {new Date().getFullYear()} Sticko. Built with ❤️ by{" "}
+            <a
+              href="https://justtayyabkhan.vercel.app"
+              target="_blank"
+              className="text-orange-400 cursor-pointer hover:underline font-bold"
+            >
+              Tayyab Khan
+            </a>
+          </p>
+        </footer>
       </form>
     </main>
   );

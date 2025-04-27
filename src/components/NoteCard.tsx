@@ -11,18 +11,19 @@ export default function NoteCard({
   content,
   todos,
   color,
+  onSave, // ✅ New prop
 }: {
   id: string;
   title: string;
   content?: string;
   todos?: Todo[];
   color?: string;
+  onSave: () => void; // ✅ New prop type
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const [editedTitle, setEditedTitle] = useState(title);
   const [editedContent, setEditedContent] = useState(content || "");
   const [editedTodos, setEditedTodos] = useState<Todo[]>(todos || []);
-
   const openModal = () => setIsOpen(true);
   const closeModal = () => setIsOpen(false);
 
@@ -34,10 +35,9 @@ export default function NoteCard({
         onClick={openModal}
         style={{
           backgroundColor: color || "#1e1e1e",
-          minHeight: "220px",
-          maxHeight: "220px",
-          overflow: "hidden",
-        }}
+          minHeight: "180px", // small minimum height for empty notes
+          overflow: "visible", // allow natural growth
+        }} 
       >
         <h3 className="text-lg font-semibold mb-1 text-white truncate">
           {title}
@@ -66,10 +66,10 @@ export default function NoteCard({
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 px-4">
           <div className="bg-[#1e1e1e] rounded-2xl w-full max-w-md p-6 text-white relative shadow-xl space-y-4">
             <button
-              className="absolute top-4 right-4 text-gray-300 hover:text-white"
+              className="absolute top-4 right-4 text-gray-300 hover:text-white cursor-pointer"
               onClick={closeModal}
             >
-              <X size={20} />
+              <X size={20} color={"red"} />
             </button>
 
             <input
@@ -117,7 +117,7 @@ export default function NoteCard({
             <div className="flex justify-end gap-3 pt-2">
               <button
                 onClick={closeModal}
-                className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm"
+                className="px-3 py-1 bg-gray-700 hover:bg-gray-600 rounded text-sm cursor-pointer"
               >
                 Cancel
               </button>
@@ -144,8 +144,8 @@ export default function NoteCard({
                       throw new Error("Failed to update note");
                     }
 
-                    // Optionally: trigger a data re-fetch or show a success toast
-                    closeModal();
+                    onSave(); // ✅ Re-fetch notes after saving
+                    closeModal(); // ✅ Close modal
                   } catch (err) {
                     console.error(err);
                     alert("Error updating note");

@@ -6,7 +6,7 @@ import { jwtDecode } from "jwt-decode";
 type DecodedToken = {
   id: string;
   name: string;
-  exp: number;  
+  exp: number;
 };
 
 interface NoteEditorProps {
@@ -68,11 +68,10 @@ export default function NoteEditor({ onClose, onSave }: NoteEditorProps) {
         return;
       }
 
-      // Clear inputs and tell parent to refresh
       setTitle("");
       setContent("");
-      onSave();
-      onClose();
+      onSave();     // ✅ re-fetch notes after saving
+      onClose();    // ✅ close modal
     } catch (err) {
       console.error("Save note error:", err);
       setError("An unexpected error occurred");
@@ -80,8 +79,8 @@ export default function NoteEditor({ onClose, onSave }: NoteEditorProps) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50">
-      <div className="bg-[#1e1e1e] p-6 rounded-xl w-[90%] max-w-md shadow-2xl">
+    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-start z-50 px-4 py-8 overflow-y-auto">
+      <div className="bg-[#1e1e1e] p-6 rounded-xl w-full max-w-md shadow-2xl">
         <h2 className="text-xl font-bold text-white mb-4">Add a Note</h2>
 
         {error && <div className="text-red-400 mb-2">{error}</div>}
@@ -98,8 +97,8 @@ export default function NoteEditor({ onClose, onSave }: NoteEditorProps) {
           placeholder="Write something..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
-          rows={4}
-          className="w-full mb-3 px-4 py-2 rounded bg-zinc-800 text-white"
+          rows={6}
+          className="w-full mb-3 px-4 py-2 rounded bg-zinc-800 text-white resize-none"
         />
 
         <div className="flex justify-between items-center">
@@ -116,13 +115,13 @@ export default function NoteEditor({ onClose, onSave }: NoteEditorProps) {
           <div className="space-x-2">
             <button
               onClick={onClose}
-              className="bg-gray-600 px-4 py-1 rounded text-white"
+              className="bg-gray-600 px-4 py-1 rounded text-white cursor-pointer"
             >
               Cancel
             </button>
             <button
               onClick={handleSubmit}
-              className="bg-blue-600 px-4 py-1 rounded text-white disabled:opacity-50"
+              className="bg-blue-600 px-4 py-1 rounded text-white disabled:opacity-50 cursor-pointer"
             >
               Save
             </button>
