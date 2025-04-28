@@ -37,7 +37,7 @@ export default function NoteCard({
           backgroundColor: color || "#1e1e1e",
           minHeight: "180px", // small minimum height for empty notes
           overflow: "visible", // allow natural growth
-        }} 
+        }}
       >
         <h3 className="text-lg font-semibold mb-1 text-white truncate">
           {title}
@@ -125,6 +125,34 @@ export default function NoteCard({
                 onClick={async () => {
                   try {
                     const res = await fetch(`/api/notes/${id}`, {
+                      method: "DELETE",
+                      headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${localStorage.getItem(
+                          "token"
+                        )}`,
+                      },
+                    });
+
+                    if (!res.ok) {
+                      throw new Error("Failed to delete note");
+                    }
+
+                    onSave(); // ✅ Refresh notes
+                    closeModal(); // ✅ Close modal
+                  } catch (err) {
+                    console.error(err);
+                    alert("Error deleting note");
+                  }
+                }}
+                className="px-3 py-1 bg-red-600 hover:bg-red-700 rounded text-sm cursor-pointer"
+              >
+                Delete
+              </button>
+              <button
+                onClick={async () => {
+                  try {
+                    const res = await fetch(`/api/notes/${id}`, {
                       method: "PATCH",
                       headers: {
                         "Content-Type": "application/json",
@@ -144,7 +172,7 @@ export default function NoteCard({
                       throw new Error("Failed to update note");
                     }
 
-                    onSave(); // ✅ Re-fetch notes after saving
+                    onSave(); // ✅ Re-fetch notes
                     closeModal(); // ✅ Close modal
                   } catch (err) {
                     console.error(err);

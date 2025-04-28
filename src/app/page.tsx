@@ -59,8 +59,8 @@ export default function HomePage() {
   };
 
   return (
-    <main className="min-h-screen p-4 bg-[#121212] text-gray-200">
-      <header className="flex justify-between items-center mb-6">
+    <main className="flex flex-col min-h-screen p-4 bg-[#121212] text-gray-200">
+      <header className="flex justify-between items-center mb-6 p-4">
         <h1 className="text-3xl font-bold text-white">📝 Sticko</h1>
         {/* 🔥 Logout Button */}
         <button
@@ -71,7 +71,7 @@ export default function HomePage() {
         </button>
       </header>
 
-      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 flex-grow">
         {notes.map((note) => (
           <NoteCard
             key={note._id}
@@ -97,9 +97,10 @@ export default function HomePage() {
       )}
 
       {/* 🔥 Professional Footer */}
-      <footer className="mt-15 p-4 text-center text-sm text-gray-400 font-bold">
+      <footer className="p-4 text-center text-sm text-gray-400 font-bold">
         <p>
-          © {new Date().getFullYear()} Sticko. Built with ❤️ by <a
+          © {new Date().getFullYear()} Sticko. Built with ❤️ by
+          <a
             href="https://justtayyabkhan.vercel.app"
             target="_blank"
             className="text-orange-400 cursor-pointer hover:underline font-bold"
