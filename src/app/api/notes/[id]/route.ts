@@ -2,8 +2,6 @@ import connectDB from "../../../../lib/connectDB";
 import Note from "../../../../lib/models/Note";
 import jwt from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
-import type { NextApiRequest, NextApiResponse } from 'next';
-
 
 type DecodedToken = {
   id: string;
