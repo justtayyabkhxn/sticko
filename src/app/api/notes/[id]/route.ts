@@ -48,14 +48,15 @@ export async function PATCH(req: NextRequest) {
   }
 }
 
+// Catch-all route with correct parameter handling for dynamic routes
 export async function DELETE(
   req: NextRequest,
-  context: { params: { id: string } }
+  context: { params: { id: string } }  // Params for dynamic API route
 ) {
   try {
     await connectDB();
 
-    const { id } = context.params;  // Use context.params here
+    const { id } = context.params;  // Access the dynamic `id` parameter
 
     if (!id) {
       return NextResponse.json({ message: "Note ID missing" }, { status: 400 });
