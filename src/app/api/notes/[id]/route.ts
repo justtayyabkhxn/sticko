@@ -2,6 +2,8 @@ import connectDB from "../../../../lib/connectDB";
 import Note from "../../../../lib/models/Note";
 import jwt from "jsonwebtoken";
 import { NextRequest, NextResponse } from "next/server";
+import type { NextApiRequest, NextApiResponse } from 'next';
+
 
 type DecodedToken = {
   id: string;
@@ -13,7 +15,7 @@ export async function PATCH(req: NextRequest) {
   try {
     await connectDB();
 
-    const noteId = req.nextUrl.pathname.split('/')[3]; // `/api/notes/[id]`
+    const noteId = req.nextUrl.pathname.split("/")[3]; // `/api/notes/[id]`
     const authHeader = req.headers.get("authorization");
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -31,7 +33,10 @@ export async function PATCH(req: NextRequest) {
     const existingNote = await Note.findById(noteId);
 
     if (!existingNote || existingNote.userId.toString() !== userId) {
-      return NextResponse.json({ error: "Note not found or unauthorized" }, { status: 403 });
+      return NextResponse.json(
+        { error: "Note not found or unauthorized" },
+        { status: 403 }
+      );
     }
 
     // Update the note
@@ -44,33 +49,48 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json(updatedNote);
   } catch (err) {
     console.error(err);
-    return NextResponse.json({ error: "Failed to update note" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update note" },
+      { status: 500 }
+    );
   }
 }
 
-// Catch-all route with correct parameter handling for dynamic routes
-export async function DELETE(
-  req: NextRequest,
-  context: { params: { id: string } }  // Params for dynamic API route
-) {
+export async function DELETE(req: Request) {
   try {
     await connectDB();
 
-    const { id } = context.params;  // Access the dynamic `id` parameter
+    const url = new URL(req.url);
+    const id = url.pathname.split("/").pop(); // Extract the ID from the URL
 
     if (!id) {
-      return NextResponse.json({ message: "Note ID missing" }, { status: 400 });
+      return new Response(JSON.stringify({ message: "Note ID missing" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
     const deletedNote = await Note.findByIdAndDelete(id);
 
     if (!deletedNote) {
-      return NextResponse.json({ message: "Note not found" }, { status: 404 });
+      return new Response(JSON.stringify({ message: "Note not found" }), {
+        status: 404,
+        headers: { "Content-Type": "application/json" },
+      });
     }
 
-    return NextResponse.json({ message: "Note deleted successfully" }, { status: 200 });
+    return new Response(
+      JSON.stringify({ message: "Note deleted successfully" }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }
+    );
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ message: "Server error" }, { status: 500 });
+    console.error("Error deleting note:", error);
+    return new Response(JSON.stringify({ message: "Server error" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
   }
 }
