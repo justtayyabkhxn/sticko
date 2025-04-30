@@ -13,7 +13,7 @@ export async function PATCH(req: NextRequest) {
   try {
     await connectDB();
 
-    const noteId = req.nextUrl.pathname.split('/')[3]; // Assuming the ID is in the URL like `/api/notes/[id]`
+    const noteId = req.nextUrl.pathname.split('/')[3]; // `/api/notes/[id]`
     const authHeader = req.headers.get("authorization");
 
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
@@ -25,7 +25,7 @@ export async function PATCH(req: NextRequest) {
     const userId = decoded.id;
 
     const body = await req.json();
-    const { title, content, todos, color } = body;
+    const { title, content, todos, color, pinned } = body; // ✅ Include pinned
 
     // Ensure the note belongs to the logged-in user
     const existingNote = await Note.findById(noteId);
@@ -37,7 +37,7 @@ export async function PATCH(req: NextRequest) {
     // Update the note
     const updatedNote = await Note.findByIdAndUpdate(
       noteId,
-      { title, content, todos, color },
+      { title, content, todos, color, pinned }, // ✅ Add pinned to update
       { new: true }
     );
 
@@ -47,6 +47,7 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Failed to update note" }, { status: 500 });
   }
 }
+
 
 export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
   try {

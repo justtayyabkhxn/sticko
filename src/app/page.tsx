@@ -11,7 +11,9 @@ type Note = {
   content?: string;
   todos?: { text: string; completed: boolean }[];
   color?: string;
+  pinned?: boolean;
 };
+
 
 export default function HomePage() {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -30,18 +32,24 @@ export default function HomePage() {
 
   const fetchNotes = async () => {
     const token = localStorage.getItem("token");
-
+  
     try {
       const res = await fetch("/api/notes", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-
+  
       const data = await res.json();
-
+  
       if (Array.isArray(data)) {
-        setNotes(data);
+        // ✅ Sort by pinned (pinned notes first)
+        const sortedNotes = data.sort((a, b) => {
+          if (a.pinned === b.pinned) return 0;
+          return a.pinned ? -1 : 1;
+        });
+  
+        setNotes(sortedNotes);
       } else {
         console.error("Expected array but got:", data);
         setNotes([]);
@@ -51,6 +59,7 @@ export default function HomePage() {
       setNotes([]);
     }
   };
+  
 
   // 🔥 Logout function
   const handleLogout = () => {
@@ -74,14 +83,16 @@ export default function HomePage() {
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 flex-grow">
         {notes.map((note) => (
           <NoteCard
-            key={note._id}
-            id={note._id}
-            title={note.title}
-            content={note.content}
-            todos={note.todos}
-            color={note.color}
-            onSave={fetchNotes}
-          />
+          key={note._id}
+          id={note._id}
+          title={note.title}
+          content={note.content}
+          todos={note.todos}
+          color={note.color}
+          pinned={note.pinned}
+          onSave={fetchNotes}
+        />
+        
         ))}
       </section>
 
@@ -99,13 +110,13 @@ export default function HomePage() {
       {/* 🔥 Professional Footer */}
       <footer className="p-4 text-center text-sm text-gray-400 font-bold">
         <p>
-          © {new Date().getFullYear()} Sticko. Built with ❤️ by
+          © {new Date().getFullYear()} Sticko. Built with ❤️ by 
           <a
             href="https://justtayyabkhan.vercel.app"
             target="_blank"
             className="text-orange-400 cursor-pointer hover:underline font-bold"
           >
-            Tayyab Khan
+           {" "}  Tayyab Khan
           </a>
         </p>
       </footer>

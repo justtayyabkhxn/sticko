@@ -80,7 +80,7 @@ export default function NoteEditor({ onClose, onSave }: NoteEditorProps) {
 
   return (
     <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-start z-50 px-4 py-8 overflow-y-auto">
-      <div className="bg-[#1e1e1e] p-6 rounded-xl w-full max-w-md shadow-2xl">
+      <div className="bg-[#1e1e1e] p-6 rounded-xl w-full max-w-md shadow-2xl h-[600px] overflow-y-auto">
         <h2 className="text-xl font-bold text-white mb-4">Add a Note</h2>
 
         {error && <div className="text-red-400 mb-2">{error}</div>}
@@ -98,7 +98,7 @@ export default function NoteEditor({ onClose, onSave }: NoteEditorProps) {
           value={content}
           onChange={(e) => setContent(e.target.value)}
           rows={6}
-          className="w-full mb-3 px-4 py-2 rounded bg-zinc-800 text-white resize-none"
+          className="w-full mb-3 px-4 py-2 rounded bg-zinc-800 text-white resize-none h-[400px]"
         />
 
         <div className="flex justify-between items-center">
