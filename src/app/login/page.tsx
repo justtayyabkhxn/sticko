@@ -8,26 +8,34 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    const res = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
-    });
+    setLoading(true); // Start loading
 
-    const data = await res.json();
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    if (res.ok) {
-      localStorage.setItem("token", data.token); // you can use cookies for better security
-      router.push("/");
-    } else {
-      alert(data.message || "Login failed");
+      const data = await res.json();
+
+      if (res.ok) {
+        localStorage.setItem("token", data.token);
+        router.push("/");
+      } else {
+        alert(data.message || "Login failed");
+      }
+    } catch (error) {
+      alert("An error occurred. Please try again.");
+    } finally {
+      setLoading(false); // End loading
     }
   };
 
@@ -45,6 +53,7 @@ export default function LoginPage() {
           className="w-full p-2 mb-3 rounded bg-zinc-800 text-white"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
 
         <div className="relative">
@@ -54,6 +63,7 @@ export default function LoginPage() {
             className="w-full p-2 pr-10 mb-4 rounded bg-zinc-800 text-white"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
+            required
           />
           <button
             type="button"
@@ -66,9 +76,12 @@ export default function LoginPage() {
 
         <button
           type="submit"
-          className="w-full bg-green-600 p-2 rounded cursor-pointer mb-3 font-bold text-shadow-lg/10"
+          disabled={loading}
+          className={`w-full ${
+            loading ? "bg-green-400" : "bg-green-600"
+          } p-2 rounded cursor-pointer mb-3 font-bold text-shadow-lg/10`}
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
 
         <p className="text-sm text-gray-400">
@@ -77,20 +90,20 @@ export default function LoginPage() {
             Sign up
           </Link>
         </p>
+
         <footer className="mt-2 p-4 text-center text-sm text-gray-400 font-bold">
-        <p>
-          © {new Date().getFullYear()} Sticko. Built with ❤️ by <a
-            href="https://justtayyabkhan.vercel.app"
-            target="_blank"
-            className="text-orange-400 cursor-pointer hover:underline font-bold"
-          >
-            Tayyab Khan
-          </a>
-        </p>
-      </footer>
+          <p>
+            © {new Date().getFullYear()} Sticko. Built with ❤️ by{" "}
+            <a
+              href="https://justtayyabkhan.vercel.app"
+              target="_blank"
+              className="text-orange-400 cursor-pointer hover:underline font-bold"
+            >
+              Tayyab Khan
+            </a>
+          </p>
+        </footer>
       </form>
-      {/* 🔥 Professional Footer */}
-      
     </main>
   );
 }

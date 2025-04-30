@@ -9,22 +9,30 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoading(true); // Start loading
 
-    const res = await fetch("/api/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    });
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password }),
+      });
 
-    if (res.ok) {
-      router.push("/login");
-    } else {
-      const data = await res.json();
-      alert(data.message || "Something went wrong.");
+      if (res.ok) {
+        router.push("/login");
+      } else {
+        const data = await res.json();
+        alert(data.message || "Something went wrong.");
+      }
+    } catch (err) {
+      alert("Network error. Please try again.");
+    } finally {
+      setLoading(false); // Stop loading
     }
   };
 
@@ -74,9 +82,12 @@ export default function SignupPage() {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 p-2 rounded cursor-pointer mb-3"
+          disabled={loading}
+          className={`w-full ${
+            loading ? "bg-blue-400" : "bg-blue-600"
+          } p-2 rounded cursor-pointer mb-3 font-bold`}
         >
-          Sign up
+          {loading ? "Creating account..." : "Sign up"}
         </button>
 
         <p className="text-sm text-gray-400">
@@ -85,6 +96,7 @@ export default function SignupPage() {
             Login
           </Link>
         </p>
+
         <footer className="mt-2 p-4 text-center text-sm text-gray-400 font-bold">
           <p>
             © {new Date().getFullYear()} Sticko. Built with ❤️ by{" "}
