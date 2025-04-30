@@ -33,7 +33,7 @@ export default function LoginPage() {
         alert(data.message || "Login failed");
       }
     } catch (error) {
-      alert("An error occurred. Please try again.");
+      alert("An error occurred. Please try again."+error);
     } finally {
       setLoading(false); // End loading
     }

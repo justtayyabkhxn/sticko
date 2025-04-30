@@ -30,7 +30,7 @@ export default function SignupPage() {
         alert(data.message || "Something went wrong.");
       }
     } catch (err) {
-      alert("Network error. Please try again.");
+      alert("Network error. Please try again."+err);
     } finally {
       setLoading(false); // Stop loading
     }
