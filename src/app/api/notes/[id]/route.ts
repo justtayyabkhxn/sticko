@@ -48,15 +48,14 @@ export async function PATCH(req: NextRequest) {
   }
 }
 
-
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Record<string, string> }
 ) {
   try {
     await connectDB();
 
-    const { id } = params;
+    const { id } = context.params;
 
     if (!id) {
       return NextResponse.json({ message: 'Note ID missing' }, { status: 400 });
@@ -74,3 +73,4 @@ export async function DELETE(
     return NextResponse.json({ message: 'Server error' }, { status: 500 });
   }
 }
+
