@@ -50,27 +50,26 @@ export async function PATCH(req: NextRequest) {
 
 export async function DELETE(
   req: NextRequest,
-  context: { params: Record<string, string> }
+  context: { params: { id: string } }
 ) {
   try {
     await connectDB();
 
-    const { id } = context.params;
+    const { id } = context.params;  // Use context.params here
 
     if (!id) {
-      return NextResponse.json({ message: 'Note ID missing' }, { status: 400 });
+      return NextResponse.json({ message: "Note ID missing" }, { status: 400 });
     }
 
     const deletedNote = await Note.findByIdAndDelete(id);
 
     if (!deletedNote) {
-      return NextResponse.json({ message: 'Note not found' }, { status: 404 });
+      return NextResponse.json({ message: "Note not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ message: 'Note deleted successfully' }, { status: 200 });
+    return NextResponse.json({ message: "Note deleted successfully" }, { status: 200 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: 'Server error' }, { status: 500 });
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }
-
