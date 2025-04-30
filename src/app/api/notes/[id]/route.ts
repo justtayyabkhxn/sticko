@@ -49,26 +49,28 @@ export async function PATCH(req: NextRequest) {
 }
 
 
-export async function DELETE(req: NextRequest, context: { params: { id: string } }) {
+export async function DELETE(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    await connectDB(); // ✅ Make sure MongoDB is connected
+    await connectDB();
 
-    const { params } = context; // ✅ first get context.params
-    const id = params.id;        // ✅ then use id from it
+    const { id } = params;
 
     if (!id) {
-      return NextResponse.json({ message: "Note ID missing" }, { status: 400 });
+      return NextResponse.json({ message: 'Note ID missing' }, { status: 400 });
     }
 
     const deletedNote = await Note.findByIdAndDelete(id);
 
     if (!deletedNote) {
-      return NextResponse.json({ message: "Note not found" }, { status: 404 });
+      return NextResponse.json({ message: 'Note not found' }, { status: 404 });
     }
 
-    return NextResponse.json({ message: "Note deleted successfully" }, { status: 200 });
+    return NextResponse.json({ message: 'Note deleted successfully' }, { status: 200 });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ message: "Server error" }, { status: 500 });
+    return NextResponse.json({ message: 'Server error' }, { status: 500 });
   }
 }
