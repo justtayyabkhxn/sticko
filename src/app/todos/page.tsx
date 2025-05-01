@@ -134,7 +134,7 @@ export default function TodosPage() {
         <h1 className="text-3xl font-bold text-white">📝 Sticko - Todos</h1>
         <div className="flex gap-4">
           <Link
-            href="/"
+            href="/notes"
             className="bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 rounded-md shadow font-bold"
           >
             Notes

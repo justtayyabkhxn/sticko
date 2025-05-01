@@ -1,9 +1,5 @@
 import mongoose from 'mongoose';
 
-const todoSchema = new mongoose.Schema({
-  text: String,
-  completed: { type: Boolean, default: false }
-});
 
 const noteSchema = new mongoose.Schema(
   {

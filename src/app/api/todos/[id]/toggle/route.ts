@@ -36,8 +36,8 @@ export async function PATCH(req: NextRequest, context: { params: { id: string } 
     await todo.save();
 
     return NextResponse.json(todo, { status: 200 });
-  } catch (err: any) {
-    console.error("Error toggling todo:", err.message);
+  } catch (err) {
+    console.error("Error toggling todo:", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

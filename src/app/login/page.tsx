@@ -35,7 +35,7 @@ export default function LoginPage() {
         setErrorMessage(data.message || "Login failed");
       }
     } catch (error) {
-      setErrorMessage("An error occurred. Please try again.");
+      setErrorMessage("An error occurred. Please try again."+error);
     } finally {
       setLoading(false); // End loading
     }
@@ -67,12 +67,20 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword((prev) => !prev)}
+            className="absolute right-2 top-2 text-sm text-gray-400 cursor-pointer"
+          >
+            {showPassword ? "Hide" : "Show"}
+          </button>
         </div>
-
         <button
           type="submit"
           disabled={loading}
-          className={`w-full ${loading ? "bg-green-400" : "bg-green-600"} p-2 rounded cursor-pointer mb-3 font-bold text-shadow-lg/10`}
+          className={`w-full ${
+            loading ? "bg-green-400" : "bg-green-600"
+          } p-2 rounded cursor-pointer mb-3 font-bold text-shadow-lg/10`}
         >
           {loading ? "Logging in..." : "Login"}
         </button>

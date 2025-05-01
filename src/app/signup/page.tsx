@@ -33,7 +33,7 @@ export default function SignupPage() {
         setError(data.message || "Something went wrong.");
       }
     } catch (err) {
-      setError("Network error. Please try again.");
+      setError("Network error. Please try again."+err);
     } finally {
       setLoading(false);
     }
