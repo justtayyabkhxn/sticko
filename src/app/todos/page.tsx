@@ -89,7 +89,7 @@ export default function TodosPage() {
 
   const handleDeleteTodo = async (id: string) => {
     const token = localStorage.getItem("token");
-  
+
     try {
       const res = await fetch(`/api/todos/${id}`, {
         method: "DELETE",
@@ -97,7 +97,7 @@ export default function TodosPage() {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       if (res.ok) {
         fetchTodos(); // Refresh the todos list after deletion
       } else {
@@ -131,7 +131,9 @@ export default function TodosPage() {
   return (
     <main className="flex flex-col min-h-screen p-4 bg-[#121212] text-gray-200">
       <header className="flex flex-col sm:flex-row justify-between items-center mb-6 p-4 gap-4">
-        <h1 className="text-3xl font-bold text-white">📝 Sticko - Todos</h1>
+        <Link href="/">
+          <h1 className="text-3xl font-bold text-white">📝 Sticko - Notes </h1>
+        </Link>{" "}
         <div className="flex gap-4">
           <Link
             href="/notes"

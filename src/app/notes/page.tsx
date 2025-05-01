@@ -6,7 +6,6 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
-
 type Note = {
   _id: string;
   title: string;
@@ -81,7 +80,9 @@ export default function HomePage() {
   return (
     <main className="flex flex-col min-h-screen p-4 bg-[#121212] text-gray-200">
       <header className="flex flex-col sm:flex-row justify-between items-center mb-6 p-4 gap-4">
-      <h1 className="text-3xl font-bold text-white">📝 Sticko - Notes </h1>
+        <Link href="/">
+          <h1 className="text-3xl font-bold text-white">📝 Sticko - Notes </h1>
+        </Link>
         <div className="flex gap-4">
           <Link
             href="/notes"
