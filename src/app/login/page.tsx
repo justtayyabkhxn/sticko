@@ -9,11 +9,13 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true); // Start loading
+    setErrorMessage(null); // Reset error message before making the request
 
     try {
       const res = await fetch("/api/auth/login", {
@@ -30,10 +32,10 @@ export default function LoginPage() {
         localStorage.setItem("token", data.token);
         router.push("/");
       } else {
-        alert(data.message || "Login failed");
+        setErrorMessage(data.message || "Login failed");
       }
     } catch (error) {
-      alert("An error occurred. Please try again."+error);
+      setErrorMessage("An error occurred. Please try again.");
     } finally {
       setLoading(false); // End loading
     }
@@ -65,24 +67,19 @@ export default function LoginPage() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-5 transform -translate-y-1/2 text-sm text-gray-400 cursor-pointer"
-          >
-            {showPassword ? "Hide" : "Show"}
-          </button>
         </div>
 
         <button
           type="submit"
           disabled={loading}
-          className={`w-full ${
-            loading ? "bg-green-400" : "bg-green-600"
-          } p-2 rounded cursor-pointer mb-3 font-bold text-shadow-lg/10`}
+          className={`w-full ${loading ? "bg-green-400" : "bg-green-600"} p-2 rounded cursor-pointer mb-3 font-bold text-shadow-lg/10`}
         >
           {loading ? "Logging in..." : "Login"}
         </button>
+
+        {errorMessage && (
+          <p className="text-red-500 text-sm mb-3">{errorMessage}</p>
+        )}
 
         <p className="text-sm text-gray-400">
           Don&apos;t have an account?{" "}

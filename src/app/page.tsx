@@ -14,7 +14,6 @@ type Note = {
   pinned?: boolean;
 };
 
-
 export default function HomePage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [showEditor, setShowEditor] = useState(false);
@@ -32,23 +31,22 @@ export default function HomePage() {
 
   const fetchNotes = async () => {
     const token = localStorage.getItem("token");
-  
+
     try {
       const res = await fetch("/api/notes", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-  
+
       const data = await res.json();
-  
+
       if (Array.isArray(data)) {
-        // ✅ Sort by pinned (pinned notes first)
         const sortedNotes = data.sort((a, b) => {
           if (a.pinned === b.pinned) return 0;
           return a.pinned ? -1 : 1;
         });
-  
+
         setNotes(sortedNotes);
       } else {
         console.error("Expected array but got:", data);
@@ -59,40 +57,58 @@ export default function HomePage() {
       setNotes([]);
     }
   };
-  
 
-  // 🔥 Logout function
   const handleLogout = () => {
     localStorage.removeItem("token");
-    window.location.reload(); // Reloads the page
+    window.location.reload();
+  };
+
+  // 💾 Save notes to JSON
+  const handleSaveNotes = () => {
+    const json = JSON.stringify(notes, null, 2);
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `sticko-notes-${Date.now()}.json`;
+    a.click();
+
+    URL.revokeObjectURL(url);
   };
 
   return (
     <main className="flex flex-col min-h-screen p-4 bg-[#121212] text-gray-200">
       <header className="flex justify-between items-center mb-6 p-4">
         <h1 className="text-3xl font-bold text-white">📝 Sticko</h1>
-        {/* 🔥 Logout Button */}
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md shadow-lg cursor-pointer font-bold"
-        >
-          Logout
-        </button>
+        <div className="flex gap-3">
+          <button
+            onClick={handleSaveNotes}
+            className="bg-gray-600 hover:bg-gray-800 text-white px-4 py-2 rounded-md shadow-lg cursor-pointer font-bold"
+          >
+            Save Notes
+          </button>
+          <button
+            onClick={handleLogout}
+            className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md shadow-lg cursor-pointer font-bold"
+          >
+            Logout
+          </button>
+        </div>
       </header>
 
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 flex-grow">
         {notes.map((note) => (
           <NoteCard
-          key={note._id}
-          id={note._id}
-          title={note.title}
-          content={note.content}
-          todos={note.todos}
-          color={note.color}
-          pinned={note.pinned}
-          onSave={fetchNotes}
-        />
-        
+            key={note._id}
+            id={note._id}
+            title={note.title}
+            content={note.content}
+            todos={note.todos}
+            color={note.color}
+            pinned={note.pinned}
+            onSave={fetchNotes}
+          />
         ))}
       </section>
 
@@ -107,16 +123,15 @@ export default function HomePage() {
         <NoteEditor onClose={() => setShowEditor(false)} onSave={fetchNotes} />
       )}
 
-      {/* 🔥 Professional Footer */}
       <footer className="p-4 text-center text-sm text-gray-400 font-bold">
         <p>
-          © {new Date().getFullYear()} Sticko. Built with ❤️ by 
+          © {new Date().getFullYear()} Sticko. Built with ❤️ by{" "}
           <a
             href="https://justtayyabkhan.vercel.app"
             target="_blank"
             className="text-orange-400 cursor-pointer hover:underline font-bold"
           >
-           {" "}  Tayyab Khan
+            Tayyab Khan
           </a>
         </p>
       </footer>

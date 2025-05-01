@@ -10,11 +10,13 @@ export default function SignupPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(""); // New state for error message
   const router = useRouter();
 
   const handleSignup = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setLoading(true); // Start loading
+    setLoading(true);
+    setError(""); // Reset error
 
     try {
       const res = await fetch("/api/register", {
@@ -23,16 +25,17 @@ export default function SignupPage() {
         body: JSON.stringify({ name, email, password }),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
         router.push("/login");
       } else {
-        const data = await res.json();
-        alert(data.message || "Something went wrong.");
+        setError(data.message || "Something went wrong.");
       }
     } catch (err) {
-      alert("Network error. Please try again."+err);
+      setError("Network error. Please try again.");
     } finally {
-      setLoading(false); // Stop loading
+      setLoading(false);
     }
   };
 
@@ -85,10 +88,14 @@ export default function SignupPage() {
           disabled={loading}
           className={`w-full ${
             loading ? "bg-blue-400" : "bg-blue-600"
-          } p-2 rounded cursor-pointer mb-3 font-bold`}
+          } p-2 rounded cursor-pointer mb-2 font-bold`}
         >
           {loading ? "Creating account..." : "Sign up"}
         </button>
+
+        {error && (
+          <p className="text-red-500 mb-3 text-sm font-medium">{error}</p>
+        )}
 
         <p className="text-sm text-gray-400">
           Already have an account?{" "}
