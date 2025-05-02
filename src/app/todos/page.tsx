@@ -176,7 +176,7 @@ export default function TodosPage() {
           />
           <button
             onClick={handleAddTodo}
-            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-white font-bold cursor-pointer"
+            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-white font-bold text-sm cursor-pointer"
           >
             Add Todo
           </button>
