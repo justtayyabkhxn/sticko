@@ -35,7 +35,6 @@ Sticko is a web application built using **Next.js**, **TypeScript**, and **Tailw
 
 - **Frontend**: Next.js, TypeScript, Tailwind CSS
 - **Backend**: Node.js, Express, MongoDB (for storing notes and todos)
-- **AI Integration**: Google Gemini API (for generative AI tasks like summarization, rewriting, etc.)
 
 ---
 
@@ -83,23 +82,6 @@ Visit `http://localhost:3000` in your browser.
 
 ---
 
-## AI Integration
-
-Sticko includes AI-powered features that allow users to interact with their notes through prompts such as:
-- **Summarization**: "Summarize this note in 3 bullet points."
-- **Rewriting**: "Rewrite this note more professionally."
-- **Translation**: "Translate this note into Urdu."
-- **Generate Todo List**: "Generate a to-do list from this note."
-
-### AI Setup
-
-1. **Google Gemini API**: Install the Gemini SDK:
-   ```bash
-   npm install @google/generative-ai
-   ```
-2. **API Route**: The `api/ask-ai.ts` route sends requests to Google Gemini's generative models.
-
----
 
 ## How to Use
 
@@ -112,13 +94,6 @@ Sticko includes AI-powered features that allow users to interact with their note
 
 - **Notes**: Go to the "Notes" page, click "Add Note", and start typing.
 - **Todos**: Switch to the "Todos" page, add your tasks, and mark them as completed when done.
-
-### AI Features for Notes
-
-- On each note, you will find the "Ask AI" button, which will open a modal.
-- Select a prompt (e.g., Summarize, Rewrite, Translate) to interact with the note using AI.
-
----
 
 ## File Structure
 
