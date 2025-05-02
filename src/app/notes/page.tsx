@@ -14,9 +14,11 @@ type Note = {
   color?: string;
   pinned?: boolean;
 };
+
 export default function HomePage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [showEditor, setShowEditor] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -63,7 +65,6 @@ export default function HomePage() {
     window.location.reload();
   };
 
-  // 💾 Save notes to JSON
   const handleSaveNotes = () => {
     const json = JSON.stringify(notes, null, 2);
     const blob = new Blob([json], { type: "application/json" });
@@ -76,6 +77,11 @@ export default function HomePage() {
 
     URL.revokeObjectURL(url);
   };
+
+  const filteredNotes = notes.filter((note) =>
+    note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    (note.content?.toLowerCase().includes(searchQuery.toLowerCase()) ?? false)
+  );
 
   return (
     <main className="flex flex-col min-h-screen p-4 bg-[#121212] text-gray-200">
@@ -97,7 +103,6 @@ export default function HomePage() {
             Todos
           </Link>
         </div>
-        {/* Existing Logout + Save Buttons */}
         <div className="flex gap-3">
           <button
             onClick={handleSaveNotes}
@@ -114,32 +119,53 @@ export default function HomePage() {
         </div>
       </header>
 
+      {/* 🔍 Search Input */}
+      <div className="mb-6 flex justify-center">
+        <input
+          type="text"
+          placeholder="Search notes..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full max-w-md px-4 py-2 rounded-md bg-[#1f1f1f] text-white border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      {/* 🗂 Filtered Notes */}
       <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 flex-grow">
-        {notes.map((note) => (
-          <NoteCard
-            key={note._id}
-            id={note._id}
-            title={note.title}
-            content={note.content}
-            todos={note.todos}
-            color={note.color}
-            pinned={note.pinned}
-            onSave={fetchNotes}
-          />
-        ))}
+        {filteredNotes.length > 0 ? (
+          filteredNotes.map((note) => (
+            <NoteCard
+              key={note._id}
+              id={note._id}
+              title={note.title}
+              content={note.content}
+              todos={note.todos}
+              color={note.color}
+              pinned={note.pinned}
+              onSave={fetchNotes}
+            />
+          ))
+        ) : (
+          <p className="text-center col-span-full text-gray-400">
+            No notes found.
+          </p>
+        )}
       </section>
 
+      {/* ➕ Create New Note */}
       <button
         onClick={() => setShowEditor(true)}
-        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-2xl text-xl cursor-pointer"
+        className="fixed bottom-6 right-6 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-2xl text-sm font-bold cursor-pointer text-shadow-2xs/10"
       >
-        +
+        Add Note
       </button>
 
+      {/* 📝 Note Editor Modal */}
       {showEditor && (
         <NoteEditor onClose={() => setShowEditor(false)} onSave={fetchNotes} />
       )}
 
+      {/* 🔻 Footer */}
       <footer className="p-4 text-center text-sm text-gray-400 font-bold">
         <p>
           © {new Date().getFullYear()} Sticko. Built with ❤️ by{" "}

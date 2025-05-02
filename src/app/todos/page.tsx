@@ -99,7 +99,7 @@ export default function TodosPage() {
       });
 
       if (res.ok) {
-        fetchTodos(); // Refresh the todos list after deletion
+        fetchTodos();
       } else {
         const data = await res.json();
         console.error("Failed to delete todo:", data.message);
@@ -114,7 +114,6 @@ export default function TodosPage() {
     window.location.reload();
   };
 
-  // 💾 Save todos to JSON file
   const handleSaveTodos = () => {
     const json = JSON.stringify(todos, null, 2);
     const blob = new Blob([json], { type: "application/json" });
@@ -129,11 +128,11 @@ export default function TodosPage() {
   };
 
   return (
-    <main className="flex flex-col min-h-screen p-4 bg-[#121212] text-gray-200">
+    <main className="flex flex-col min-h-screen bg-[#121212] text-gray-200 p-4">
       <header className="flex flex-col sm:flex-row justify-between items-center mb-6 p-4 gap-4">
         <Link href="/">
-          <h1 className="text-3xl font-bold text-white">📝 Sticko - Notes </h1>
-        </Link>{" "}
+          <h1 className="text-3xl font-bold text-white">📝 Sticko - Notes</h1>
+        </Link>
         <div className="flex gap-4">
           <Link
             href="/notes"
@@ -164,56 +163,61 @@ export default function TodosPage() {
         </div>
       </header>
 
-      {/* Input section */}
-      <div className="flex gap-4 mb-6">
-        <input
-          type="text"
-          value={newTodo}
-          onChange={(e) => setNewTodo(e.target.value)}
-          placeholder="Add a new todo..."
-          className="flex-grow px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none"
-        />
-        <button
-          onClick={handleAddTodo}
-          className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-white font-bold cursor-pointer"
-        >
-          Add
-        </button>
-      </div>
+      {/* Content Wrapper with flex-grow */}
+      <div className="flex-grow p-4">
+        {/* Input section */}
+        <div className="flex gap-4 mb-6">
+          <input
+            type="text"
+            value={newTodo}
+            onChange={(e) => setNewTodo(e.target.value)}
+            placeholder="Add a new todo..."
+            className="flex-grow px-4 py-2 rounded-md bg-gray-800 text-white focus:outline-none"
+          />
+          <button
+            onClick={handleAddTodo}
+            className="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-md text-white font-bold cursor-pointer"
+          >
+            Add Todo
+          </button>
+        </div>
 
-      {/* Todos list */}
-      <section className="flex flex-wrap gap-4 justify-start items-center">
-        {todos.length === 0 ? (
-          <p className="text-gray-400 col-span-full">No todos found.</p>
-        ) : (
-          todos.map((todo) => (
-            <div
-              key={todo._id}
-              className={`cursor-pointer p-4 rounded-md shadow bg-gray-800 transition-all duration-200 hover:bg-gray-700 w-full sm:w-auto ${
-                todo.completed ? "line-through text-gray-500" : ""
-              }`}
-            >
-              <div className="flex justify-between items-center">
-                <div
-                  onClick={() => handleToggleComplete(todo._id)}
-                  className="flex-grow"
-                >
-                  {todo.text}
+        {/* Todos list */}
+        <section className="flex flex-wrap gap-4 justify-start items-center">
+          {todos.length === 0 ? (
+            <p className="text-gray-400 col-span-full">No todos found.</p>
+          ) : (
+            todos.map((todo) => (
+              <div
+                key={todo._id}
+                className={`cursor-pointer p-4 rounded-md shadow transition-all duration-200 w-full sm:w-auto ${
+                  todo.completed
+                    ? "bg-green-800 text-white line-through"
+                    : "bg-gray-800 hover:bg-gray-700 text-white"
+                }`}
+              >
+                <div className="flex justify-between items-center">
+                  <div
+                    onClick={() => handleToggleComplete(todo._id)}
+                    className="flex-grow"
+                  >
+                    {todo.text}
+                  </div>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDeleteTodo(todo._id);
+                    }}
+                    className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-md ml-4"
+                  >
+                    Delete
+                  </button>
                 </div>
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleDeleteTodo(todo._id);
-                  }}
-                  className="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded-md ml-4"
-                >
-                  Delete
-                </button>
               </div>
-            </div>
-          ))
-        )}
-      </section>
+            ))
+          )}
+        </section>
+      </div>
 
       <footer className="p-4 text-center text-sm text-gray-400 font-bold">
         <p>
